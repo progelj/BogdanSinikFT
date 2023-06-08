@@ -20,17 +20,17 @@ for j=trainIndexes
     EEG = pop_biosig(fname);
     % rereferencing?
     XTrain{j*2-2+i,1} = EEG.data(ChanIndexes,:);     %% why so complex indexes
-    %XTrain{j*2-2+i,1} = XTrain{j*2-2+i,1}(indices,:)
+    XTrain{j*2-2+i,1} = XTrain{j*2-2+i,1}(:,any(XTrain{j*2-2+i,1},1)); %remove zero columns
     Len=length(XTrain{j*2-2+i,1});
     YTrain{j*2-2+i,1} = categorical( ones(1,Len), [0 1], {'eyesClosed', 'eyesOpen'})
-
+    
     i=2
     %value="eyesClosed"
     fname=[datapath '/S' num2str(j,'%03d')  '/S' num2str(j,'%03d')  'R0' int2str(i) '.edf'];
     EEG = pop_biosig(fname);
     % rereferencing?
     XTrain{j*2-2+i,1} = EEG.data(ChanIndexes,:);    %% why so complex indexes
-    %XTrain{j*2-2+i,1} = XTrain{j*2-2+i,1}(indices,:);
+    XTrain{j*2-2+i,1} = XTrain{j*2-2+i,1}(:,any(XTrain{j*2-2+i,1},1)); %remove zero columns
     Len=length(XTrain{j*2-2+i,1});
     YTrain{j*2-2+i,1} = categorical( zeros(1,Len), [0 1], {'eyesClosed', 'eyesOpen'});
     
@@ -47,7 +47,7 @@ i=1
     EEG = pop_biosig(fname);
     % rereferencing?
     XTest{j*2-2+i,1} = EEG.data(ChanIndexes,:);     %% why so complex indexes
-    %XTest{j*2-2+i,1} = XTest{j*2-2+i,1}(indices,:)
+    XTest{j*2-2+i,1} = XTest{j*2-2+i,1}(:,any(XTest{j*2-2+i,1},1));
     Len=length(XTest{j*2-2+i,1});
     YTest{j*2-2+i,1} = categorical( ones(1,Len), [0 1], {'eyesClosed', 'eyesOpen'})
 
@@ -57,7 +57,7 @@ i=1
     EEG = pop_biosig(fname);
     % rereferencing?
     XTest{j*2-2+i,1} = EEG.data(ChanIndexes,:);    %% why so complex indexes
-    %XTest{j*2-2+i,1} = XTest{j*2-2+i,1}(indices,:);
+    XTest{j*2-2+i,1} = XTest{j*2-2+i,1}(:,any(XTest{j*2-2+i,1},1));
     Len=length(XTest{j*2-2+i,1});
     YTest{j*2-2+i,1} = categorical( zeros(1,Len), [0 1], {'eyesClosed', 'eyesOpen'});
     
@@ -66,4 +66,4 @@ i=1
     YTest = YTest(~cellfun('isempty',YTest));
 end
 
-save("AllOnlineData.mat","XTrain","YTrain","XTest", "YTest");
+save("AllOnlineDataWithoutZeros.mat","XTrain","YTrain","XTest", "YTest");
