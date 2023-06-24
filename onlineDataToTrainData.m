@@ -2,8 +2,8 @@ clear all;
 eeglab; % added to get the eeglab functions needed to load the data.
 load('OnlineDataChannelsInfo.mat', 'onlineDataChannels');
 load('ChanList.mat');
-%datapath='/Users/ljeb/Documents/Faculty/3rd year/Thesis/DATA FROM INTERNET';
-datapath='/media/peter/FCEB-1564/EEG-files';
+datapath='/Users/ljeb/Documents/Faculty/3rd year/Thesis/DATA FROM INTERNET';
+%datapath='/media/peter/FCEB-1564/EEG-files';
 numOfSubjects = 109;
 [trainIndexes,valIndexes,testIndexes] = dividerand(numOfSubjects,0.9,0,0.1);
 ElToConsider = {'Cz..','C3..','C4..'};
@@ -19,7 +19,8 @@ for j=trainIndexes
     %value = "eyesOpen"
     fname=[datapath '/S' num2str(j,'%03d')  '/S' num2str(j,'%03d')  'R0' int2str(i) '.edf'];
     EEG = pop_biosig(fname);
-
+    EEG = pop_resample( EEG, 256);
+    EEG = pop_reref( EEG, []);
     % PR: add rereferencing to average
     % PR: assure the same sampling frequency for all imported files (from
     % all sources - MotorImageryDataset has 160! ).  
@@ -32,6 +33,8 @@ for j=trainIndexes
     %value="eyesClosed"
     fname=[datapath '/S' num2str(j,'%03d')  '/S' num2str(j,'%03d')  'R0' int2str(i) '.edf'];
     EEG = pop_biosig(fname);
+    EEG = pop_resample( EEG, 256);
+    EEG = pop_reref( EEG, [])
     % rereferencing?
     XTrain{j*2-2+i,1} = EEG.data(ChanIndexes,:);    %% why so complex indexes
     XTrain{j*2-2+i,1} = XTrain{j*2-2+i,1}(:,any(XTrain{j*2-2+i,1},1)); %remove zero columns
@@ -49,6 +52,8 @@ i=1
     %value = "eyesOpen"
     fname=[datapath '/S' num2str(j,'%03d')  '/S' num2str(j,'%03d')  'R0' int2str(i) '.edf'];
     EEG = pop_biosig(fname);
+    EEG = pop_resample( EEG, 256);
+    EEG = pop_reref( EEG, [])
     % rereferencing?
     XTest{j*2-2+i,1} = EEG.data(ChanIndexes,:);     %% why so complex indexes
     XTest{j*2-2+i,1} = XTest{j*2-2+i,1}(:,any(XTest{j*2-2+i,1},1));
@@ -59,6 +64,8 @@ i=1
     %value="eyesClosed"
     fname=[datapath '/S' num2str(j,'%03d')  '/S' num2str(j,'%03d')  'R0' int2str(i) '.edf'];
     EEG = pop_biosig(fname);
+    EEG = pop_resample( EEG, 256);
+    EEG = pop_reref( EEG, [])
     % rereferencing?
     XTest{j*2-2+i,1} = EEG.data(ChanIndexes,:);    %% why so complex indexes
     XTest{j*2-2+i,1} = XTest{j*2-2+i,1}(:,any(XTest{j*2-2+i,1},1));
@@ -70,4 +77,4 @@ i=1
     YTest = YTest(~cellfun('isempty',YTest));
 end
 
-save("AllOnlineDataWithoutZeros.mat","XTrain","YTrain","XTest", "YTest");
+save("AllOnlineDataWithoutZerosRerefResamp.mat","XTrain","YTrain","XTest", "YTest");
