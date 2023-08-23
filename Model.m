@@ -132,9 +132,9 @@ numFeatures = size(XTrain{1},1)
 % Also manually add nClasses since commented in the beginning
 numFilters = 16; %64;
 %numFeatures = numel(elToConsider);
-filterSize = 16; %PRJ / 5;
+filterSize = 16;
 dropoutFactor = 0.005; %0.005
-numBlocks = 4; %PRJ/ 4;
+numBlocks = 4;
 
 
 %numFilters = 32;
